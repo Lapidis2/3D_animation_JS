@@ -1,128 +1,114 @@
-npm install framer-motion
+let hexagonCenter;
+let particles = [];
+let lines = [];
 
-import React from "react";
+function setup() {
+  createCanvas(window.innerWidth, window.innerHeight);
+  hexagonCenter = createVector(width / 2, height / 2);
 
-const WireframeCube = () => {
-  return (
-    <div className="relative flex items-center justify-center">
-    
-      <svg width="200" height="200" viewBox="0 0 100 100">
-       
-        <polygon points="30,20 70,20 85,50 45,50" stroke="green" fill="none" />
-      
-        <polygon points="20,40 60,40 75,70 35,70" stroke="green" fill="none" />
-       
-        <line x1="30" y1="20" x2="20" y2="40" stroke="green" />
-        <line x1="70" y1="20" x2="60" y2="40" stroke="green" />
-        <line x1="85" y1="50" x2="75" y2="70" stroke="green" />
-        <line x1="45" y1="50" x2="35" y2="70" stroke="green" />
-      </svg>
-      <div className="absolute text-green-500 text-xl font-bold">Image or text</div>
-    </div>
-  );
-};
+  for (let i = 0; i < 30; i++) {
+    particles.push(new Particle());
+  }
 
-export default WireframeCube;
-
-
-import React from "react";
-import { motion } from "framer-motion";
-
-const AnimatedLines = () => {
-  return (
-    <div className="absolute inset-0 flex justify-center items-center">
-      {[...Array(5)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-0.5 h-full bg-green-400"
-          initial={{ height: 0, opacity: 0 }}
-          animate={{ height: ["0%", "80%", "0%"], opacity: [0, 1, 0] }}
-          transition={{ duration: 4, repeat: Infinity, delay: i * 0.5 }}
-          style={{ left: `${20 * i + 40}px` }}
-        />
-      ))}
-    </div>
-  );
-};
-
-export default AnimatedLines;
-import React from "react";
-import { motion } from "framer-motion";
-
-const Particles = () => {
-  return (
-    <div className="absolute inset-0">
-      {[...Array(20)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute bg-green-300 rounded-full"
-          style={{
-            width: `${Math.random() * 10 + 5}px`,
-            height: `${Math.random() * 10 + 5}px`,
-            top: `${Math.random() * 100}vh`,
-            left: `${Math.random() * 100}vw`
-          }}
-          animate={{
-            y: ["0px", "20px", "-20px", "0px"],
-            opacity: [0.5, 1, 0.5]
-          }}
-          transition={{
-            duration: Math.random() * 3 + 2,
-            repeat: Infinity,
-            repeatType: "reverse"
-          }}
-        />
-      ))}
-    </div>
-  );
-};
-
-export default Particles;
-
-
-
-
-
-import React from "react";
-import WireframeCube from "./WireframeCube";
-import AnimatedLines from "./AnimatedLines";
-import Particles from "./Particles";
-
-function App() {
-  return (
-    <div className="relative w-screen h-screen flex justify-center items-center bg-gray-100">
-      <Particles />
-      <AnimatedLines />
-      <WireframeCube />
-    </div>
-  );
+  for (let i = 0; i < 5; i++) {
+    lines.push(new AnimatedLine(i % 2 === 0)); 
+  }
 }
 
-export default App;
+function draw() {
+  background(248, 249, 250);
 
+  drawHexagon(hexagonCenter.x, hexagonCenter.y, 150);
 
+  textSize(32);
+  textAlign(CENTER, CENTER);
+  fill(0, 200, 0);
+  text("Your Text Here", hexagonCenter.x, hexagonCenter.y);
 
+  particles.forEach((particle) => {
+    particle.update();
+    particle.show();
+  });
 
+  
+  lines.forEach((line) => {
+    line.update();
+    line.show();
+  });
+}
 
+function drawHexagon(x, y, size) {
+  stroke(0, 200, 0);
+  fill(0, 200, 0, 50);
+  beginShape();
+  for (let i = 0; i < 6; i++) {
+    let angle = TWO_PI / 6 * i;
+    let xOffset = x + size * cos(angle);
+    let yOffset = y + size * sin(angle);
+    vertex(xOffset, yOffset);
+  }
+  endShape(CLOSE);
+}
 
+class Particle {
+  constructor() {
+    this.x = random(width);
+    this.y = random(height);
+    this.vx = random(-2, 2);
+    this.vy = random(-2, 2);
+    this.size = random(4, 20);
+  }
 
+  update() {
+    this.x += this.vx;
+    this.y += this.vy;
+    if (this.x < 0 || this.x > width) this.vx *= -1;
+    if (this.y < 0 || this.y > height) this.vy *= -1;
+  }
 
+  show() {
+    noStroke();
+    fill(0, 200, 0, 150);
+    ellipse(this.x, this.y, this.size);
+  }
+}
 
+class AnimatedLine {
+  constructor(isDashed) {
+    this.startX = random([-10, width + 10]);
+    this.startY = random(height);
+    this.targetX = hexagonCenter.x;
+    this.targetY = hexagonCenter.y;
+    this.progress = 0;
+    this.forward = true;
+    this.speed = 0.01;
+    this.isDashed = isDashed;
+  }
 
+  update() {
+    if (this.forward) {
+      this.progress += this.speed;
+      if (this.progress >= 1) {
+        this.forward = false;
+      }
+    } else {
+      this.progress -= this.speed;
+      if (this.progress <= 0) {
+        this.forward = true;
+      }
+    }
+  }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  show() {
+    stroke(0, 200, 0, 150);
+    if (this.isDashed) {
+      drawingContext.setLineDash([10, 10]);
+    } else {
+      drawingContext.setLineDash([]);
+    }
+    let x = lerp(this.startX, this.targetX, this.progress);
+    let y = lerp(this.startY, this.targetY, this.progress);
+    line(this.startX, this.startY, x, y);
+    drawingContext.setLineDash([]);
+  }
+}
