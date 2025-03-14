@@ -46,10 +46,6 @@ const AnimatedLines = () => {
 };
 
 export default AnimatedLines;
-
-
-
-
 import React from "react";
 import { motion } from "framer-motion";
 
