@@ -17,7 +17,7 @@ const WireframeCube = () => {
         <line x1="85" y1="50" x2="75" y2="70" stroke="green" />
         <line x1="45" y1="50" x2="35" y2="70" stroke="green" />
       </svg>
-      <div className="absolute text-green-500 text-xl font-bold">Your Text Here</div>
+      <div className="absolute text-green-500 text-xl font-bold">Image or text</div>
     </div>
   );
 };
