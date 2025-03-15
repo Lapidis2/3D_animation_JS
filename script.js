@@ -43,7 +43,7 @@ function draw() {
 }
 
 function drawHexagon(x, y, size) {
-    stroke(0, 200, 0);
+    stroke(200, 200, 200);
     fill(200, 200, 200, 150);
     beginShape();
     for (let i = 0; i < 6; i++) {
@@ -105,7 +105,7 @@ class AnimatedLine {
     }
 
     show() {
-        stroke(0, 200, 0, 150);
+        stroke(200, 200, 200, 150);
         if (this.isDashed) {
             drawingContext.setLineDash([10, 10]);
         } else {
