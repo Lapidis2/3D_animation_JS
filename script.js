@@ -1,10 +1,10 @@
 let hexagonCenter;
 let particles = [];
 let lines = [];
-let img; // Variable to hold the image
+let img; 
 
 function preload() {
-    img = loadImage("/assets/success.jpg"); // Specify the path to your image
+    img = loadImage("/assets/success.jpg"); 
 }
 
 function setup() {
@@ -25,9 +25,8 @@ function draw() {
 
     drawHexagon(hexagonCenter.x, hexagonCenter.y, 150);
 
-    // Draw the image inside the hexagon
     if (img) {
-        let imgSize = 80; // Adjust the size of the image
+        let imgSize = 80; 
         imageMode(CENTER);
         image(img, hexagonCenter.x, hexagonCenter.y, imgSize, imgSize);
     }
@@ -45,7 +44,7 @@ function draw() {
 
 function drawHexagon(x, y, size) {
     stroke(0, 200, 0);
-    fill(0, 200, 0, 50);
+    fill(200, 200, 200, 150);
     beginShape();
     for (let i = 0; i < 6; i++) {
         let angle = TWO_PI / 6 * i;
@@ -74,7 +73,7 @@ class Particle {
 
     show() {
         noStroke();
-        fill(0, 200, 0, 150);
+        fill(200, 200, 200, 150);
         ellipse(this.x, this.y, this.size);
     }
 }
